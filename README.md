@@ -5,10 +5,11 @@ User-Password Hash Comparison Tool v1.0
 Simple utility that allows for the comparison between a file with a 'user:hash' format to a separate file with a 'hash:password' format. The comparison matches the hashes and returns an output file in the format 'user:password'
 
 Example of 'user:hash' -> george:c21cfaebe1d69ac9e2e4e1e2dc383bac
+
 Example of 'hash:password' -> c21cfaebe1d69ac9e2e4e1e2dc383bac:password
 
 'user:hash' obtained from creddump suite: http://code.google.com/p/creddump/
-  Note: Used custom 'dshashes.py' file: http://ptscripts.googlecode.com/svn/trunk/dshashes.py
+     Note: Used custom 'dshashes.py' file: http://ptscripts.googlecode.com/svn/trunk/dshashes.py
 'hash:password' obtained from ocl-Hashcat output
 
 
