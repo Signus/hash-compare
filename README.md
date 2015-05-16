@@ -1,25 +1,53 @@
 hashcompare
 ===========
+A simple utility that allows for easy password recovery from oclHashcat cracking sessions.
 
-User-Password Hash Comparison Tool v1.0
-Simple utility that allows for the comparison between a file with a 'user:hash' format to a separate file with a 'hash:password' format. The comparison matches the hashes and returns an output file in the format 'user:password'
+In the instance where oclHashcat spits out successfully cracked passwords via the format `hash:password`, and the original file of hashes is in the format `user:hash`, this tool matches on the hash and produces an output file with the format of `user:password`.
 
-Example of 'user:hash' -> george:c21cfaebe1d69ac9e2e4e1e2dc383bac
+## Examples
 
-Example of 'hash:password' -> c21cfaebe1d69ac9e2e4e1e2dc383bac:password
+user:hash
+```
+george:c21cfaebe1d69ac9e2e4e1e2dc383bac
+```
 
-'user:hash' obtained from creddump suite: http://code.google.com/p/creddump/
-     Note: Used custom 'dshashes.py' file: http://ptscripts.googlecode.com/svn/trunk/dshashes.py
-'hash:password' obtained from ocl-Hashcat output
+hash:password
+```
+c21cfaebe1d69ac9e2e4e1e2dc383bac:password
+```
 
+## Tools
+The following tools were used in a proof of concept attack I conducted, of which led to the need to build a series of scripts (namely this one) to automate the process of password extraction and cracking from compromised Active Directory machines.
+### creddump (https://github.com/moyix/creddump)
+Used for dumping cached credentials.
 
+### libesedb (https://github.com/libyal/libesedb)
+Extracts the relevant portions of the NTDS tables.
 
-To use the utility, the files need to be in the specified format. I will work out a method to do format checking in the future.
-If the files are not in 'user:hash" or "hash:password" format, simply use 'sed' or 'cut' in Cygwin or Linux.
+### NTDSXtract (https://github.com/csababarta/ntdsxtract)
+A custom file, [dshashes.py](http://ptscripts.googlecode.com/svn/trunk/dshashes.py), was used to export the password hashes into a more usable format. place the `dshashes.py` file into the root of NTDSXtract.
 
-Example: If the file has the format ":::user:PID:LM:NTLM:::" simply run 'cut -d: -f1,4 [inputfile]' which uses the delimeter ':' and retains the user:NTLM data.
+## Usage
+Both of the input files need to be in the correct format of `user:hash` and `hash:password`, as this was built without the ability to check formatting.
 
+```sh
+sh hashcompare.sh -i [user:hash input] -t [hash:password input] -o [output file]
+```
 
+### Formatting
+In order to format the data correctly, until I update this (which probably won't happen), simply use the `cut` or `sed` utilities.
 
+Example input:
+```
+:::user:PID:LM:NTLM:::
+```
 
-Usage: sh hashcompare.sh -i [user:hash input] -t [hash:password input] -o [output file]
+Example command:
+```
+cut -d: -f1,4 [inputfile
+```
+
+Example output:
+```
+user:NTLM
+```
